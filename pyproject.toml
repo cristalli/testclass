@@ -1,0 +1,131 @@
+# As per https://github.com/pypa/setuptools/blob/main/docs/userguide/quickstart.rst
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "package_template"
+version = "0.1.0"
+description = "Python Project Template"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "black",
+    "mypy",
+    "flake8",
+    "pydocstyle",
+    "isort",
+    "taskipy",
+    "Sphinx",
+    "sphinx-rtd-theme",
+    "sphinx-pyproject",
+    "sphinx-autodoc-typehints",
+    "sphinx-autodoc-napoleon-typehints",
+    "pytest",
+    "pytest-mock",
+    "pytest-cov",
+    "pytest-html",
+    "pytest-randomly",
+    "pytest-clarity",
+    "pytest-flake8",
+    "pytest-echo",
+    "pytest-xdist",
+    "lxml",
+    "tox"
+]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[[project.authors]]
+name = "NIX"
+
+[project.scripts]
+exename = "package_template.module:main"
+
+[tool.pytest.ini_options]
+# pythonpath =[
+#   "src"
+# ]
+testpaths = [
+  "tests"
+]
+addopts = [
+  "-vv",
+  "-rfs",
+  "--cov=src",
+  "--cov-branch",
+  "--cov-report=html",
+  "--cov-report=xml",
+  "--cov-report=term-missing"
+]
+
+[tool.sphinx-pyproject]
+project = "package_template"
+copyright = "2022, Nix"
+language = "ja"
+package_root = "package_template"
+html_theme = "sphinx_rtd_theme"
+autodoc_typehints = 'description'
+autoclass_content = 'both'
+autodoc_default_options = { private-members = true, show-inheritance = true}
+
+todo_include_todos = true
+templates_path = ["_templates"]
+html_static_path = ["_static"]
+extensions = [
+  "sphinx.ext.autodoc",
+  "sphinx.ext.viewcode",
+  "sphinx.ext.todo",
+  "sphinx.ext.napoleon",
+  "sphinx.ext.coverage",
+  "sphinx_rtd_theme",
+  "sphinx_autodoc_typehints",
+]
+
+napoleon_google_docstring = true
+napoleon_numpy_docstring = true
+napoleon_include_init_with_doc = false
+napoleon_include_private_with_doc = false
+napoleon_include_special_with_doc = false
+napoleon_use_admonition_for_examples = true
+napoleon_use_admonition_for_notes = true
+napoleon_use_admonition_for_references = true
+napoleon_use_ivar = true
+napoleon_use_param = true
+napoleon_use_rtype = true
+napoleon_use_keyword = true
+
+[tool.black]
+target-version = ['py38', 'py39', 'py310']
+line-length = 88
+
+[tool.isort]
+profile = "black"
+lines_after_imports = 2
+
+[tool.flake8]
+
+[tool.mypy]
+strict = true
+follow_imports = "silent"
+ignore_missing_imports = false
+show_column_numbers = true
+no_pretty = true
+html_report = "htmlmypy"
+any_exprs_report = "txtmypy"
+txt_report = "txtmypy"
+linecount_report = "txtmypy"
+linecoverage_report = "txtmypy"
+
+[tool.taskipy.tasks]
+test = "pytest"
+fmt = "task fmt-black && task fmt-isort"
+fmt-black = "black src tests"
+fmt-isort = "isort src tests"
+lint = "task lint-black && task lint-flake8 && task lint-mypy && task lint-pydocstyle"
+lint-flake8 = "flake8 src tests"
+lint-mypy = "mypy src tests"
+lint-black = "black --check src tests"
+lint-pydocstyle = "pydocstyle src tests"
+docs = "sphinx-apidoc -F -o docs/source src && sphinx-build docs/source docs/build"
